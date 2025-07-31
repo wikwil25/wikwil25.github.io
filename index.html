@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Colorable Square</title>
+    <title>Color Toggle Square</title>
     <style>
         body {
             display: flex;
+            flex-direction: column; /* Arrange items vertically */
             justify-content: center;
             align-items: center;
             min-height: 100vh;
@@ -17,20 +18,21 @@
 
         .square-container {
             display: grid;
-            grid-template-columns: repeat(2, 100px); /* 2 columns, each 100px wide */
-            grid-template-rows: repeat(2, 100px);    /* 2 rows, each 100px high */
-            width: 200px; /* Total width 2 * 100px */
-            height: 200px; /* Total height 2 * 100px */
+            grid-template-columns: repeat(2, 100px);
+            grid-template-rows: repeat(2, 100px);
+            width: 200px;
+            height: 200px;
             border: 2px solid #333;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px; /* Space between square and buttons */
         }
 
         .part {
             width: 100px;
             height: 100px;
-            background-color: #eee; /* Default background color */
+            background-color: white; /* Default white */
             border: 1px solid #ccc;
-            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            box-sizing: border-box;
             cursor: pointer;
             display: flex;
             justify-content: center;
@@ -38,11 +40,50 @@
             font-size: 1.2em;
             font-weight: bold;
             color: #666;
-            transition: background-color 0.2s ease; /* Smooth transition for color change */
+            transition: background-color 0.2s ease;
         }
 
-        .part:hover {
-            background-color: #ddd; /* Lighter hover effect */
+        .part.blue {
+            background-color: blue; /* Blue when active */
+        }
+
+        .button-container {
+            display: flex;
+            gap: 10px; /* Space between buttons */
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.2s ease;
+        }
+
+        #submitBtn {
+            background-color: #4CAF50; /* Green */
+            color: white;
+        }
+
+        #submitBtn:hover {
+            background-color: #45a049;
+        }
+
+        #retakeBtn {
+            background-color: #f44336; /* Red */
+            color: white;
+        }
+
+        #retakeBtn:hover {
+            background-color: #da190b;
+        }
+
+        #response {
+            margin-top: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
         }
     </style>
 </head>
@@ -54,26 +95,58 @@
         <div class="part" id="part4">4</div>
     </div>
 
+    <div class="button-container">
+        <button id="submitBtn">Submit</button>
+        <button id="retakeBtn">Retake</button>
+    </div>
+
+    <div id="response"></div>
+
     <script>
         const parts = document.querySelectorAll('.part');
-        const colors = ['#FFC0CB', '#ADD8E6', '#90EE90', '#FFD700', '#FFA07A', '#B0E0E6']; // Array of colors
+        const submitBtn = document.getElementById('submitBtn');
+        const retakeBtn = document.getElementById('retakeBtn');
+        const responseDiv = document.getElementById('response');
 
-        parts.forEach(part => {
-            part.addEventListener('click', () => {
-                const currentColor = part.style.backgroundColor;
-                let newColorIndex = 0;
+        // Function to toggle color
+        function toggleColor(event) {
+            event.target.classList.toggle('blue');
+        }
 
-                // Find the index of the current color in our palette
-                const currentIndex = colors.indexOf(currentColor.toUpperCase()); // Convert to uppercase for consistent comparison
-
-                if (currentIndex !== -1 && currentIndex < colors.length - 1) {
-                    newColorIndex = currentIndex + 1;
-                } else {
-                    newColorIndex = 0; // Cycle back to the first color
+        // Function to check the number of blue parts and display response
+        function handleSubmit() {
+            let blueCount = 0;
+            parts.forEach(part => {
+                if (part.classList.contains('blue')) {
+                    blueCount++;
                 }
-                part.style.backgroundColor = colors[newColorIndex];
             });
+
+            if (blueCount === 2) {
+                responseDiv.textContent = 'Great';
+                responseDiv.style.color = 'green';
+            } else {
+                responseDiv.textContent = 'Wrong';
+                responseDiv.style.color = 'red';
+            }
+        }
+
+        // Function to reset the square and response
+        function handleRetake() {
+            parts.forEach(part => {
+                part.classList.remove('blue'); // Remove blue class to reset to white
+            });
+            responseDiv.textContent = ''; // Clear the response
+            responseDiv.style.color = '#333'; // Reset response color
+        }
+
+        // Add event listeners
+        parts.forEach(part => {
+            part.addEventListener('click', toggleColor);
         });
+
+        submitBtn.addEventListener('click', handleSubmit);
+        retakeBtn.addEventListener('click', handleRetake);
     </script>
 </body>
 </html>
