@@ -1,7 +1,79 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colorable Square</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: sans-serif;
+        }
+
+        .square-container {
+            display: grid;
+            grid-template-columns: repeat(2, 100px); /* 2 columns, each 100px wide */
+            grid-template-rows: repeat(2, 100px);    /* 2 rows, each 100px high */
+            width: 200px; /* Total width 2 * 100px */
+            height: 200px; /* Total height 2 * 100px */
+            border: 2px solid #333;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .part {
+            width: 100px;
+            height: 100px;
+            background-color: #eee; /* Default background color */
+            border: 1px solid #ccc;
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #666;
+            transition: background-color 0.2s ease; /* Smooth transition for color change */
+        }
+
+        .part:hover {
+            background-color: #ddd; /* Lighter hover effect */
+        }
+    </style>
+</head>
 <body>
-<h1>Hello World by WikWil</h1>
-<p>I'm hosted with GitHub Pages.</p>
+    <div class="square-container">
+        <div class="part" id="part1">1</div>
+        <div class="part" id="part2">2</div>
+        <div class="part" id="part3">3</div>
+        <div class="part" id="part4">4</div>
+    </div>
+
+    <script>
+        const parts = document.querySelectorAll('.part');
+        const colors = ['#FFC0CB', '#ADD8E6', '#90EE90', '#FFD700', '#FFA07A', '#B0E0E6']; // Array of colors
+
+        parts.forEach(part => {
+            part.addEventListener('click', () => {
+                const currentColor = part.style.backgroundColor;
+                let newColorIndex = 0;
+
+                // Find the index of the current color in our palette
+                const currentIndex = colors.indexOf(currentColor.toUpperCase()); // Convert to uppercase for consistent comparison
+
+                if (currentIndex !== -1 && currentIndex < colors.length - 1) {
+                    newColorIndex = currentIndex + 1;
+                } else {
+                    newColorIndex = 0; // Cycle back to the first color
+                }
+                part.style.backgroundColor = colors[newColorIndex];
+            });
+        });
+    </script>
 </body>
 </html>
